@@ -1,16 +1,26 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { isEqual } from 'lodash';
 
 //memo: 특정 컴포넌트를 memoization해서 부모컴포넌트의 state값이 변경되서 재랜더링될때
 //해당 자식 컴포넌트도 매번 재랜더링하는 것이 아닌 이전에 랜더링된 결과물을 재활용 (불필요한 재랜더링 방지)
 //memo로 자식 컴포넌트를 memoization처리했더라도 특정 prop값이 부모로부터 전달되면 전달되는 prop값이 전달시 memoization이 다시 비활성화
+//useMemo: 내부적으로 같은 값을 계속해서 반환하는 무거운 연산이 있을때 그 값자체를 메모이제이션 처리
 
 function Child(props) {
 	console.log('child');
 
+	const heavyWork = useMemo(() => {
+		let num = 0;
+		for (let i = 0; i < 800000000; i++) {
+			num++;
+		}
+		return num;
+	}, []);
+
 	return (
 		<div>
 			<h1>Child : {props.Counter}</h1>
+			<h2>{heavyWork}</h2>
 			<button onClick={props.updateCounter}>update</button>
 		</div>
 	);
